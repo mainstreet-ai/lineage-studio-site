@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Thank You — The Lineage Studio</title>
+
+  <!-- ============================================================
+    GOOGLE ADS CONVERSION TRACKING
+    This page fires the conversion when a visitor submits the form.
+    Replace AW-17827109575  → your AW-XXXXXXXXX value
+    Replace MC5hCNGDvtYbEMe10LRC → your conversion label
+  ============================================================ -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=AW-17827109575"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'AW-17827109575');
+
+    // ✅ This is the conversion event — fires every time this page loads
+    gtag('event', 'conversion', {
+      'send_to': 'AW-17827109575/MC5hCNGDvtYbEMe10LRC'
+    });
+  </script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,400&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --navy:        #1a4669;
+      --navy-dark:   #0f2d47;
+      --teal:        #03aeaa;
+      --teal-pale:   #e0f7f7;
+      --amber:       #f7ae21;
+      --coral:       #ef5129;
+      --green:       #7ab142;
+      --white:       #ffffff;
+      --cream:       #fdf9f4;
+      --text:        #1a3a52;
+      --text-light:  #5a7a8f;
+    }
+
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Lato', sans-serif;
+      background: var(--cream);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* NAV — matches main site */
+    nav {
+      height: 70px;
+      padding: 0 48px;
+      display: flex;
+      align-items: center;
+      background: rgba(255,255,255,0.97);
+      box-shadow: 0 1px 0 rgba(26,70,105,0.1), 0 2px 16px rgba(26,70,105,0.06);
+    }
+    .nav-logo {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      text-decoration: none;
+    }
+    .nav-logo-text {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: var(--navy);
+      letter-spacing: 0.04em;
+    }
+
+    /* MAIN CONTENT */
+    main {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 60px 24px;
+    }
+
+    .card {
+      background: var(--white);
+      border-radius: 8px;
+      box-shadow: 0 4px 40px rgba(26,70,105,0.1);
+      max-width: 620px;
+      width: 100%;
+      overflow: hidden;
+      animation: fadeUp 0.7s ease both;
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Color bar matching hero accent */
+    .card-bar {
+      height: 5px;
+      background: linear-gradient(to right, var(--teal), var(--amber), var(--coral), var(--green));
+    }
+
+    .card-body {
+      padding: 52px 56px;
+      text-align: center;
+    }
+
+    /* Animated checkmark circle */
+    .check-wrap {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      background: var(--teal-pale);
+      border: 3px solid var(--teal);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 32px;
+      animation: pop 0.5s 0.3s cubic-bezier(0.34,1.56,0.64,1) both;
+    }
+    @keyframes pop {
+      from { opacity: 0; transform: scale(0.4); }
+      to   { opacity: 1; transform: scale(1); }
+    }
+    .check-wrap svg {
+      width: 38px; height: 38px;
+      stroke: var(--teal);
+      stroke-width: 2.5;
+      fill: none;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    h1 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(28px, 4vw, 40px);
+      font-weight: 400;
+      color: var(--navy);
+      line-height: 1.2;
+      margin-bottom: 14px;
+    }
+    h1 em { font-style: italic; color: var(--teal); }
+
+    .subtitle {
+      font-size: 15px;
+      font-weight: 300;
+      line-height: 1.75;
+      color: var(--text-light);
+      max-width: 460px;
+      margin: 0 auto 40px;
+    }
+
+    /* What happens next */
+    .next-steps {
+      background: var(--cream);
+      border-radius: 6px;
+      padding: 28px 32px;
+      text-align: left;
+      margin-bottom: 36px;
+    }
+    .next-steps h2 {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--teal);
+      margin-bottom: 18px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .next-steps h2::before {
+      content: '';
+      display: block;
+      width: 20px; height: 2px;
+      background: var(--teal);
+    }
+    .steps-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+    .steps-list li {
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+      font-size: 14px;
+      font-weight: 300;
+      line-height: 1.6;
+      color: var(--text);
+    }
+    .step-num {
+      flex-shrink: 0;
+      width: 26px; height: 26px;
+      border-radius: 50%;
+      background: var(--navy);
+      color: var(--white);
+      font-size: 11px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-top: 1px;
+    }
+
+    /* Back button */
+    .btn-back {
+      display: inline-block;
+      padding: 14px 36px;
+      background: var(--navy);
+      color: var(--white);
+      font-family: 'Lato', sans-serif;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      text-decoration: none;
+      border-radius: 4px;
+      border: 2px solid var(--navy);
+      transition: all 0.22s;
+    }
+    .btn-back:hover {
+      background: transparent;
+      color: var(--navy);
+    }
+
+    /* Footer */
+    footer {
+      background: var(--navy-dark);
+      padding: 24px 48px;
+      text-align: center;
+    }
+    footer p {
+      font-size: 12px;
+      font-weight: 300;
+      color: rgba(255,255,255,0.45);
+    }
+    footer a { color: var(--teal); text-decoration: none; }
+
+    /* Mobile */
+    @media (max-width: 600px) {
+      nav { padding: 0 24px; }
+      .card-body { padding: 36px 24px; }
+      .next-steps { padding: 22px 20px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Navigation -->
+  <nav>
+    <a href="index.html" class="nav-logo">
+      <!-- Logo image — update src to match your GitHub path -->
+      <img src="Tree_Logo_on_Transparent_Background.png" alt="Lineage Studio" height="44" onerror="this.style.display='none'">
+      <span class="nav-logo-text">The Lineage Studio</span>
+    </a>
+  </nav>
+
+  <!-- Main Content -->
+  <main>
+    <div class="card">
+      <div class="card-bar"></div>
+      <div class="card-body">
+
+        <!-- Checkmark -->
+        <div class="check-wrap">
+          <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"></polyline></svg>
+        </div>
+
+        <!-- Headline -->
+        <h1>Your inquiry has been<br><em>received.</em></h1>
+
+        <p class="subtitle">
+          Thank you for reaching out about your family's history.
+          Liane will personally review your message and respond
+          within 1–2 business days.
+        </p>
+
+        <!-- What happens next -->
+        <div class="next-steps">
+          <h2>What Happens Next</h2>
+          <ul class="steps-list">
+            <li>
+              <span class="step-num">1</span>
+              <span>Liane reviews your inquiry and prepares thoughtful questions about your family's history and goals.</span>
+            </li>
+            <li>
+              <span class="step-num">2</span>
+              <span>You'll receive a personal reply within 1–2 business days to schedule a free Discovery Consultation.</span>
+            </li>
+            <li>
+              <span class="step-num">3</span>
+              <span>During your consultation, you'll discuss your vision, what materials you already have, and the best path forward.</span>
+            </li>
+          </ul>
+        </div>
+
+        <a href="index.html" class="btn-back">← Return to Lineage Studio</a>
+
+      </div>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer>
+    <p>© 2025 The Lineage Studio &nbsp;·&nbsp; <a href="/cdn-cgi/l/email-protection#3d54535b527d515453585c5a584e494859545213524f5a"><span class="__
