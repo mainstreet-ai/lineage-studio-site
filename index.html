@@ -4,6 +4,18 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>The Lineage Studio — Family History Research & Legacy Books</title>
+
+<!-- ============================================================
+  GOOGLE ADS GLOBAL SITE TAG
+  Replace AW-17827109575 with your AW-XXXXXXXXX value
+============================================================ -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=AW-17827109575"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'AW-17827109575');
+</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
@@ -1392,4 +1404,26 @@ async function submitForm(event, formId, successId, errorId) {
     if (response.ok || response.status === 202 || response.status === 0) {
       // Success
       form.reset();
-      success.style.di
+      // Fire Google Ads conversion
+      if (typeof gtag !== 'undefined') {
+        gtag('event', 'conversion', {
+          'send_to': 'AW-17827109575/MC5hCNGDvtYbEMe10LRC'
+        });
+      }
+      // Redirect to thank-you page
+      setTimeout(() => {
+        window.top.location.href = 'thank-you.html';
+      }, 400);
+    } else {
+      throw new Error('Submission failed');
+    }
+  } catch (err) {
+    btn.disabled    = false;
+    btn.textContent = 'Get Started';
+    error.textContent = '⚠️ Something went wrong. Please email us directly at info@lineagestudio.org';
+    error.style.display = 'block';
+  }
+}
+</script>
+</body>
+</html>
