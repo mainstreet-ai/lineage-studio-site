@@ -1394,13 +1394,11 @@ async function submitForm(event, formId, successId, errorId) {
   btn.textContent = "Sending...";
 
   try {
-    const response = await fetch(WEBHOOK_URL, {
-      method:  "POST",
-      mode:    "no-cors",
-      headers: { "Content-Type": "text/plain" },
-      body:    JSON.stringify(data)
-    });
-
+  const response = await fetch(WEBHOOK_URL, {
+  method: "POST",
+  headers: { "Content-Type": "application/json" },
+  body: JSON.stringify(data)
+});
     if (response.ok || response.status === 202 || response.status === 0) {
       // Success
       form.reset();
