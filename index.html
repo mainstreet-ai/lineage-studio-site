@@ -1593,12 +1593,11 @@ async function submitForm(event, formId, successId, errorId) {
   try {
     const response = await fetch(WEBHOOK_URL, {
       method:  "POST",
-      mode:    "no-cors",
-      headers: { "Content-Type": "text/plain" },
+      headers: { "Content-Type": "application/json" },
       body:    JSON.stringify(data)
     });
 
-    if (response.ok || response.status === 202 || response.status === 0) {
+    if (response.ok || response.status === 200 || response.status === 202) {
       // Success
       form.reset();
       // Fire Google Ads conversion
@@ -1612,7 +1611,7 @@ async function submitForm(event, formId, successId, errorId) {
         window.top.location.href = 'thank-you.html';
       }, 400);
     } else {
-      throw new Error('Submission failed');
+      throw new Error('Server returned ' + response.status);
     }
   } catch (err) {
     btn.disabled    = false;
