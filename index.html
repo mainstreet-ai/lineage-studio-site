@@ -1593,7 +1593,7 @@ async function submitForm(event, formId, successId, errorId) {
   try {
     const response = await fetch(WEBHOOK_URL, {
       method:  "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: { "Content-Type": "text/plain" },
       body:    JSON.stringify(data)
     });
 
