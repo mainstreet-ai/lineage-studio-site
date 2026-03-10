@@ -1591,29 +1591,52 @@ async function submitForm(event, formId, successId, errorId) {
   btn.textContent = "Sending...";
 
   try {
-    const response = await fetch(WEBHOOK_URL, {
-      method:  "POST",
-      mode:    "no-cors",
-      headers: { "Content-Type": "text/plain" },
-      body:    JSON.stringify(data)
+    // Use hidden iframe + form submission — works on all browsers including iOS Safari/Chrome
+    // fetch/XHR can be blocked by iOS ITP in iframe contexts; native form POST never is
+    const iframeName = 'submit_frame_' + Date.now();
+
+    const iframe = document.createElement('iframe');
+    iframe.name = iframeName;
+    iframe.style.cssText = 'position:absolute;width:1px;height:1px;left:-9999px;top:-9999px;';
+    document.body.appendChild(iframe);
+
+    const hiddenForm = document.createElement('form');
+    hiddenForm.method = 'POST';
+    hiddenForm.action = WEBHOOK_URL;
+    hiddenForm.target = iframeName;
+    hiddenForm.style.display = 'none';
+
+    // Add each field so n8n reads them as body fields
+    Object.entries(data).forEach(function(entry) {
+      const input = document.createElement('input');
+      input.type  = 'hidden';
+      input.name  = entry[0];
+      input.value = String(entry[1]);
+      hiddenForm.appendChild(input);
     });
 
-    if (response.ok || response.status === 0) {
-      // Success
-      form.reset();
-      // Fire Google Ads conversion
-      if (typeof gtag !== 'undefined') {
-        gtag('event', 'conversion', {
-          'send_to': 'AW-17827109575/MC5hCNGDvtYbEMe10LRC'
-        });
-      }
-      // Redirect to thank-you page
-      setTimeout(() => {
-        window.top.location.href = 'thank-you.html';
-      }, 400);
-    } else {
-      throw new Error('Server returned ' + response.status);
+    document.body.appendChild(hiddenForm);
+    hiddenForm.submit();
+
+    // Clean up after 5 seconds
+    setTimeout(function() {
+      if (document.body.contains(hiddenForm)) document.body.removeChild(hiddenForm);
+      if (document.body.contains(iframe))     document.body.removeChild(iframe);
+    }, 5000);
+
+    // Fire Google Ads conversion
+    if (typeof gtag !== 'undefined') {
+      gtag('event', 'conversion', {
+        'send_to': 'AW-17827109575/MC5hCNGDvtYbEMe10LRC'
+      });
     }
+
+    // Redirect to thank-you page
+    form.reset();
+    setTimeout(function() {
+      window.top.location.href = 'thank-you.html';
+    }, 400);
+
   } catch (err) {
     btn.disabled    = false;
     btn.textContent = 'Get Started';
