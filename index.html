@@ -1591,15 +1591,21 @@ async function submitForm(event, formId, successId, errorId) {
   btn.textContent = "Sending...";
 
   try {
-    // keepalive: true tells the browser to complete this request even after page navigation.
-    // This is the only fetch flag that reliably works inside nested iframes on iOS Safari.
-    fetch(WEBHOOK_URL, {
-      method:    'POST',
-      mode:      'no-cors',
-      keepalive: true,
-      headers:   { 'Content-Type': 'text/plain' },
-      body:      JSON.stringify(data)
-    });
+    // sendBeacon is designed specifically to send data reliably even during page navigation.
+    // It works in iOS Safari iframes where fetch/XHR are blocked during unload.
+    var payload = new Blob([JSON.stringify(data)], { type: 'text/plain' });
+    var sent = navigator.sendBeacon(WEBHOOK_URL, payload);
+
+    // Fallback to fetch if sendBeacon not available or failed
+    if (!sent) {
+      fetch(WEBHOOK_URL, {
+        method:    'POST',
+        mode:      'no-cors',
+        keepalive: true,
+        headers:   { 'Content-Type': 'text/plain' },
+        body:      JSON.stringify(data)
+      });
+    }
 
     // Fire Google Ads conversion
     if (typeof gtag !== 'undefined') {
@@ -1608,7 +1614,6 @@ async function submitForm(event, formId, successId, errorId) {
       });
     }
 
-    // Short delay then redirect — keepalive ensures the fetch completes after navigation
     form.reset();
     setTimeout(function() {
       window.top.location.href = 'thank-you.html';
