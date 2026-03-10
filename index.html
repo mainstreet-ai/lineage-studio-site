@@ -1615,27 +1615,32 @@ async function submitForm(event, formId, successId, errorId) {
       hiddenForm.appendChild(input);
     });
 
-    document.body.appendChild(hiddenForm);
-    hiddenForm.submit();
-
-    // Clean up after 5 seconds
-    setTimeout(function() {
-      if (document.body.contains(hiddenForm)) document.body.removeChild(hiddenForm);
-      if (document.body.contains(iframe))     document.body.removeChild(iframe);
-    }, 5000);
-
-    // Fire Google Ads conversion
-    if (typeof gtag !== 'undefined') {
-      gtag('event', 'conversion', {
-        'send_to': 'AW-17827109575/MC5hCNGDvtYbEMe10LRC'
-      });
+    // Redirect AFTER iframe confirms n8n received the POST (iframe.onload fires on response)
+    // Fallback redirect after 4s in case onload doesn't fire
+    var redirectDone = false;
+    function doRedirect() {
+      if (redirectDone) return;
+      redirectDone = true;
+      // Fire Google Ads conversion
+      if (typeof gtag !== 'undefined') {
+        gtag('event', 'conversion', {
+          'send_to': 'AW-17827109575/MC5hCNGDvtYbEMe10LRC'
+        });
+      }
+      form.reset();
+      window.top.location.href = 'thank-you.html';
     }
 
-    // Redirect to thank-you page
-    form.reset();
-    setTimeout(function() {
-      window.top.location.href = 'thank-you.html';
-    }, 400);
+    // Primary: redirect when iframe loads (n8n responded = POST was received)
+    iframe.onload = function() {
+      setTimeout(doRedirect, 100);
+    };
+
+    // Fallback: redirect after 4s no matter what
+    setTimeout(doRedirect, 4000);
+
+    document.body.appendChild(hiddenForm);
+    hiddenForm.submit();
 
   } catch (err) {
     btn.disabled    = false;
