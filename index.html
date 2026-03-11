@@ -1591,19 +1591,29 @@ async function submitForm(event, formId, successId, errorId) {
   btn.textContent = "Sending...";
 
   try {
-    // sendBeacon is designed specifically to send data reliably even during page navigation.
-    // It works in iOS Safari iframes where fetch/XHR are blocked during unload.
-    var payload = new Blob([JSON.stringify(data)], { type: 'text/plain' });
-    var sent = navigator.sendBeacon(WEBHOOK_URL, payload);
+    // sendBeacon with application/x-www-form-urlencoded:
+    // - Treated as a "simple request" — no CORS preflight, works in all iframe contexts
+    // - n8n parses form fields correctly as $json.body.name, $json.body.email, etc.
+    // - Browser guarantees delivery even after page navigates away
+    var params = new URLSearchParams({
+      name:         data.name,
+      email:        data.email,
+      interest:     data.interest,
+      message:      data.message,
+      source:       data.source,
+      submitted_at: data.submitted_at
+    });
+    var payload = new Blob([params.toString()], { type: 'application/x-www-form-urlencoded' });
+    var sent = navigator.sendBeacon ? navigator.sendBeacon(WEBHOOK_URL, payload) : false;
 
-    // Fallback to fetch if sendBeacon not available or failed
+    // Fallback to fetch if sendBeacon unavailable
     if (!sent) {
       fetch(WEBHOOK_URL, {
         method:    'POST',
         mode:      'no-cors',
         keepalive: true,
-        headers:   { 'Content-Type': 'text/plain' },
-        body:      JSON.stringify(data)
+        headers:   { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body:      params.toString()
       });
     }
 
@@ -1615,6 +1625,8 @@ async function submitForm(event, formId, successId, errorId) {
     }
 
     form.reset();
+
+    // Short delay then redirect — sendBeacon guarantees delivery after navigation
     setTimeout(function() {
       window.top.location.href = 'thank-you.html';
     }, 300);
