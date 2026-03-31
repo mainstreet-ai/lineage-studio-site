@@ -1576,6 +1576,45 @@ async function submitForm(event, formId, successId, errorId) {
     return;
   }
 
+  // ── Email validation ──────────────────────────────────
+  const emailField = form.querySelector('[name="email"]');
+  const emailVal = emailField.value.trim().toLowerCase();
+
+  // 1. Format check
+  const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+  if (!emailRegex.test(emailVal)) {
+    emailField.classList.add('error');
+    error.textContent = "⚠️ Please enter a valid email address.";
+    error.style.display = "block";
+    return;
+  }
+
+  // 2. Block disposable / temporary email domains
+  const blockedDomains = [
+    'tempmail.com','throwaway.email','guerrillamail.com','mailinator.com',
+    'yopmail.com','10minutemail.com','trashmail.com','fakeinbox.com',
+    'sharklasers.com','guerrillamailblock.com','grr.la','dispostable.com',
+    'maildrop.cc','temp-mail.org','emailondeck.com','getnada.com',
+    'mohmal.com','burnermail.io','tempail.com','liveagent.com'
+  ];
+  const emailDomain = emailVal.split('@')[1];
+  if (blockedDomains.includes(emailDomain)) {
+    emailField.classList.add('error');
+    error.textContent = "⚠️ Please use a personal or work email address, not a temporary one.";
+    error.style.display = "block";
+    return;
+  }
+
+  // 3. Suspicious pattern detection (extremely long local part, all numbers, etc.)
+  const localPart = emailVal.split('@')[0];
+  if (localPart.length > 40) {
+    emailField.classList.add('error');
+    error.textContent = "⚠️ That email address looks unusual. Please double-check it.";
+    error.style.display = "block";
+    return;
+  }
+  // ── End email validation ──────────────────────────────
+
   // Collect form data
   const data = {
     name:        form.querySelector('[name="name"]').value.trim(),
