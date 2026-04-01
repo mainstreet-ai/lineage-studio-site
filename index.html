@@ -1605,7 +1605,35 @@ async function submitForm(event, formId, successId, errorId) {
     return;
   }
 
-  // 3. Suspicious pattern detection (extremely long local part, all numbers, etc.)
+  // 3. Common domain typo detection — suggests the correct domain
+  const typoMap = {
+    'gmails.com': 'gmail.com', 'gmal.com': 'gmail.com', 'gmaill.com': 'gmail.com',
+    'gmial.com': 'gmail.com', 'gamil.com': 'gmail.com', 'gnail.com': 'gmail.com',
+    'gmail.co': 'gmail.com', 'gmai.com': 'gmail.com', 'gmali.com': 'gmail.com',
+    'gmail.con': 'gmail.com', 'gmail.cmo': 'gmail.com', 'gmail.om': 'gmail.com',
+    'gmaul.com': 'gmail.com', 'gmeil.com': 'gmail.com', 'gemail.com': 'gmail.com',
+    'yahooo.com': 'yahoo.com', 'yaho.com': 'yahoo.com', 'yaoo.com': 'yahoo.com',
+    'yahoo.co': 'yahoo.com', 'yahoo.con': 'yahoo.com', 'yhaoo.com': 'yahoo.com',
+    'hotmial.com': 'hotmail.com', 'hotmal.com': 'hotmail.com', 'hotmil.com': 'hotmail.com',
+    'hotmail.co': 'hotmail.com', 'hotmail.con': 'hotmail.com', 'hotmaill.com': 'hotmail.com',
+    'outlok.com': 'outlook.com', 'outllok.com': 'outlook.com', 'outlook.co': 'outlook.com',
+    'outook.com': 'outlook.com', 'outlool.com': 'outlook.com', 'outlook.con': 'outlook.com',
+    'iclod.com': 'icloud.com', 'icloud.co': 'icloud.com', 'icoud.com': 'icloud.com',
+    'icloud.con': 'icloud.com', 'icloude.com': 'icloud.com',
+    'aol.co': 'aol.com', 'aol.con': 'aol.com',
+    'comcast.ne': 'comcast.net', 'comcast.ney': 'comcast.net',
+    'sbcglobal.ne': 'sbcglobal.net', 'sbcgloabl.net': 'sbcglobal.net',
+    'charter.ne': 'charter.net'
+  };
+  if (typoMap[emailDomain]) {
+    const suggested = emailVal.replace(emailDomain, typoMap[emailDomain]);
+    emailField.classList.add('error');
+    error.innerHTML = "⚠️ Did you mean <strong>" + suggested + "</strong>? Please fix your email address and try again.";
+    error.style.display = "block";
+    return;
+  }
+
+  // 4. Suspicious pattern detection (extremely long local part)
   const localPart = emailVal.split('@')[0];
   if (localPart.length > 40) {
     emailField.classList.add('error');
