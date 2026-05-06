@@ -801,6 +801,8 @@ function updateTotal() {
 
 // Add timestamp when form submits
 document.getElementById('orderForm').addEventListener('submit', function(e) {
+  e.preventDefault(); // Prevent page navigation
+  
   const now = new Date();
   document.getElementById('submittedAt').value = now.toLocaleString('en-US', { 
     timeZone: 'America/New_York',
@@ -811,6 +813,35 @@ document.getElementById('orderForm').addEventListener('submit', function(e) {
     minute: '2-digit',
     second: '2-digit'
   });
+  
+  // Disable submit button
+  const submitBtn = this.querySelector('.btn-submit');
+  const originalText = submitBtn.textContent;
+  submitBtn.textContent = 'Submitting...';
+  submitBtn.disabled = true;
+  
+  // Create hidden iframe for submission (avoids CORS and redirect issues)
+  const iframe = document.createElement('iframe');
+  iframe.style.display = 'none';
+  iframe.name = 'form-submit-frame';
+  document.body.appendChild(iframe);
+  
+  // Set form target to iframe
+  this.target = 'form-submit-frame';
+  
+  // Submit the form
+  this.submit();
+  
+  // Show success message after brief delay
+  setTimeout(() => {
+    alert('✅ Order submitted successfully! We\'ll contact you within 24 hours with payment instructions.');
+    this.reset();
+    this.target = ''; // Reset target
+    updateTotal();
+    submitBtn.textContent = originalText;
+    submitBtn.disabled = false;
+    document.body.removeChild(iframe);
+  }, 1000);
 });
 
 // Initialize
