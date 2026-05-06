@@ -660,7 +660,7 @@
   <div class="order-form-wrap">
     <h3>Complete Your Order</h3>
     
-    <form id="orderForm" method="POST" action="https://lineagestudio.app.n8n.cloud/webhook-test/ancestor-biography-order">
+    <form id="orderForm" method="POST" action="https://lineagestudio.app.n8n.cloud/webhook/ancestor-biography-order">
       <div class="form-field">
         <label>Your Name *</label>
         <input type="text" name="name" required>
@@ -826,7 +826,7 @@ document.getElementById('orderForm').addEventListener('submit', function(e) {
   const params = new URLSearchParams(formData);
   
   // Send using fetch with no-cors mode
-  const webhookURL = 'https://lineagestudio.app.n8n.cloud/webhook-test/ancestor-biography-order';
+  const webhookURL = 'https://lineagestudio.app.n8n.cloud/webhook/ancestor-biography-order';
   
   fetch(webhookURL, {
     method: 'POST',
