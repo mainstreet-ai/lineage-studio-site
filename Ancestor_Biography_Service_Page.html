@@ -450,60 +450,6 @@
     min-height: 120px;
     resize: vertical;
   }
-  .file-upload {
-    border: 2px dashed rgba(26,70,105,0.2);
-    border-radius: 8px;
-    padding: 32px;
-    text-align: center;
-    background: var(--cream);
-    transition: all 0.2s;
-    cursor: pointer;
-  }
-  .file-upload:hover {
-    border-color: var(--teal);
-    background: var(--teal-pale);
-  }
-  .file-upload input[type="file"] {
-    display: none;
-  }
-  .file-upload-icon {
-    font-size: 48px;
-    margin-bottom: 16px;
-  }
-  .file-upload p {
-    font-size: 14px;
-    color: var(--text-light);
-    margin-bottom: 8px;
-  }
-  .file-upload small {
-    font-size: 12px;
-    color: var(--mid-gray);
-  }
-  .file-list {
-    margin-top: 16px;
-  }
-  .file-item {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 12px;
-    background: var(--cream);
-    border-radius: 6px;
-    margin-bottom: 8px;
-  }
-  .file-item-name {
-    font-size: 14px;
-    color: var(--text);
-  }
-  .file-item-remove {
-    background: var(--coral);
-    color: var(--white);
-    border: none;
-    padding: 6px 12px;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 12px;
-  }
   .btn-submit {
     width: 100%;
     padding: 16px 32px;
@@ -714,7 +660,7 @@
   <div class="order-form-wrap">
     <h3>Complete Your Order</h3>
     
-    <form id="orderForm">
+    <form id="orderForm" method="POST" action="https://lineagestudio.app.n8n.cloud/webhook-test/ancestor-biography-order">
       <div class="form-field">
         <label>Your Name *</label>
         <input type="text" name="name" required>
@@ -740,42 +686,23 @@
         <input type="text" name="birth_death" placeholder="e.g., 1892 to 1965">
       </div>
 
-      <div class="form-field">
-        <label>Upload GEDCOM File (if you have one)</label>
-        <div class="file-upload" onclick="document.getElementById('gedcom-file').click()">
-          <div class="file-upload-icon">📁</div>
-          <p>Click to upload GEDCOM file</p>
-          <small>Or drag and drop here</small>
-          <input type="file" id="gedcom-file" accept=".ged,.gedcom">
-        </div>
-        <div class="file-list" id="gedcom-list"></div>
-      </div>
-
-      <div class="form-field">
-        <label>Upload Photos (up to 20)</label>
-        <div class="file-upload" onclick="document.getElementById('photo-files').click()">
-          <div class="file-upload-icon">📷</div>
-          <p>Click to upload photos</p>
-          <small>JPG, PNG (up to 20 files)</small>
-          <input type="file" id="photo-files" accept="image/*" multiple>
-        </div>
-        <div class="file-list" id="photo-list"></div>
-      </div>
-
-      <div class="form-field">
-        <label>Upload Documents (census, military records, etc.)</label>
-        <div class="file-upload" onclick="document.getElementById('doc-files').click()">
-          <div class="file-upload-icon">📄</div>
-          <p>Click to upload documents</p>
-          <small>PDF, JPG, PNG</small>
-          <input type="file" id="doc-files" accept=".pdf,image/*" multiple>
-        </div>
-        <div class="file-list" id="doc-list"></div>
-      </div>
+      <!-- Hidden fields for calculator values -->
+      <input type="hidden" id="hidden-package" name="package" value="essential">
+      <input type="hidden" id="hidden-rush" name="rush" value="false">
+      <input type="hidden" id="hidden-secondAncestor" name="secondAncestor" value="false">
+      <input type="hidden" id="hidden-extraResearch" name="extraResearch" value="false">
+      <input type="hidden" id="hidden-extraCopies" name="extraCopies" value="0">
+      <input type="hidden" id="hidden-total" name="total" value="300">
+      <input type="hidden" id="hidden-deposit" name="deposit" value="150">
+      <input type="hidden" name="submittedAt" id="submittedAt">
 
       <div class="form-field">
         <label>Tell me about your ancestor</label>
         <textarea name="message" placeholder="What do you know about them? What stories have been passed down? What research have you already done?"></textarea>
+      </div>
+
+      <div style="background: var(--teal-pale); padding: 16px; border-radius: 8px; margin-bottom: 24px; font-size: 14px; color: var(--text);">
+        <strong>📎 Note:</strong> File uploads (GEDCOM, photos, documents) will be requested via email after you submit this form. This avoids technical issues and ensures all files are received properly.
       </div>
 
       <button type="submit" class="btn-submit">Submit Order & Pay Deposit</button>
@@ -806,12 +733,22 @@ document.querySelectorAll('.package-option').forEach(option => {
     document.querySelectorAll('.package-option').forEach(opt => opt.classList.remove('selected'));
     this.classList.add('selected');
     basePrice = parseInt(this.dataset.price);
+    
+    // Update hidden form field
+    document.getElementById('hidden-package').value = this.id;
+    
     updateTotal();
   });
 });
 
 document.querySelectorAll('.addon-item input[type="checkbox"]:not(#extra-copies)').forEach(checkbox => {
-  checkbox.addEventListener('change', updateTotal);
+  checkbox.addEventListener('change', function() {
+    // Update hidden form fields
+    const fieldName = 'hidden-' + (this.id === 'second-ancestor' ? 'secondAncestor' : this.id === 'extra-research' ? 'extraResearch' : this.id);
+    document.getElementById(fieldName).value = this.checked ? 'true' : 'false';
+    
+    updateTotal();
+  });
 });
 
 function incrementCopies() {
@@ -819,6 +756,7 @@ function incrementCopies() {
   if (parseInt(input.value) < 10) {
     input.value = parseInt(input.value) + 1;
     document.getElementById('extra-copies').checked = input.value > 0;
+    document.getElementById('hidden-extraCopies').value = input.value;
     updateTotal();
   }
 }
@@ -828,6 +766,7 @@ function decrementCopies() {
   if (parseInt(input.value) > 0) {
     input.value = parseInt(input.value) - 1;
     document.getElementById('extra-copies').checked = input.value > 0;
+    document.getElementById('hidden-extraCopies').value = input.value;
     updateTotal();
   }
 }
@@ -849,114 +788,32 @@ function updateTotal() {
   const grandTotal = basePrice + addonsPrice;
   const deposit = Math.round(grandTotal * 0.5);
   
+  // Update hidden form fields
+  document.getElementById('hidden-total').value = grandTotal;
+  document.getElementById('hidden-deposit').value = deposit;
+  
+  // Update display
   document.getElementById('base-total').textContent = '$' + basePrice;
   document.getElementById('addons-total').textContent = '$' + addonsPrice;
   document.getElementById('grand-total').textContent = '$' + grandTotal;
   document.getElementById('deposit-total').textContent = '$' + deposit;
 }
 
-// File Upload Handlers
-document.getElementById('gedcom-file').addEventListener('change', function(e) {
-  handleFileUpload(e.target.files, 'gedcom-list');
-});
-
-document.getElementById('photo-files').addEventListener('change', function(e) {
-  handleFileUpload(e.target.files, 'photo-list');
-});
-
-document.getElementById('doc-files').addEventListener('change', function(e) {
-  handleFileUpload(e.target.files, 'doc-list');
-});
-
-function handleFileUpload(files, listId) {
-  const list = document.getElementById(listId);
-  list.innerHTML = '';
-  
-  Array.from(files).forEach((file, index) => {
-    const item = document.createElement('div');
-    item.className = 'file-item';
-    item.innerHTML = `
-      <span class="file-item-name">${file.name}</span>
-      <button type="button" class="file-item-remove" onclick="removeFile('${listId}', ${index})">Remove</button>
-    `;
-    list.appendChild(item);
-  });
-}
-
-function removeFile(listId, index) {
-  // Note: this is a simplified version - full implementation would need proper file management
-  const list = document.getElementById(listId);
-  const items = list.querySelectorAll('.file-item');
-  if (items[index]) {
-    items[index].remove();
-  }
-}
-
-// Form Submission
-const WEBHOOK_URL = 'https://lineagestudio.app.n8n.cloud/webhook-test/ancestor-biography-order';
-
+// Add timestamp when form submits
 document.getElementById('orderForm').addEventListener('submit', function(e) {
-  e.preventDefault();
-  
-  const submitBtn = this.querySelector('.btn-submit');
-  const originalText = submitBtn.textContent;
-  submitBtn.textContent = 'Submitting Order...';
-  submitBtn.disabled = true;
-  
-  // Get selected package
-  const selectedPackage = document.querySelector('.package-option.selected').id;
-  
-  // Get add-on values
-  const rushChecked = document.getElementById('rush').checked;
-  const secondAncestorChecked = document.getElementById('second-ancestor').checked;
-  const extraResearchChecked = document.getElementById('extra-research').checked;
-  const copiesQty = document.getElementById('copies-qty').value;
-  
-  // Collect form data
-  const formData = {
-    name: this.querySelector('[name="name"]').value,
-    email: this.querySelector('[name="email"]').value,
-    phone: this.querySelector('[name="phone"]').value || 'Not provided',
-    ancestor_name: this.querySelector('[name="ancestor_name"]').value,
-    birth_death: this.querySelector('[name="birth_death"]').value || 'Not provided',
-    message: this.querySelector('[name="message"]').value || 'Not provided',
-    package: selectedPackage,
-    rush: rushChecked,
-    secondAncestor: secondAncestorChecked,
-    extraResearch: extraResearchChecked,
-    extraCopies: copiesQty,
-    total: document.getElementById('grand-total').textContent.replace('$', ''),
-    deposit: document.getElementById('deposit-total').textContent.replace('$', ''),
-    submittedAt: new Date().toLocaleString('en-US', { timeZone: 'America/New_York' })
-  };
-  
-  // Send to n8n webhook
-  fetch(WEBHOOK_URL, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify(formData)
-  })
-  .then(response => {
-    if (!response.ok) throw new Error('Network response was not ok');
-    return response.json();
-  })
-  .then(data => {
-    alert('Order submitted successfully! Check your email for confirmation and payment instructions.');
-    this.reset();
-    updateTotal();
-  })
-  .catch(error => {
-    console.error('Error:', error);
-    alert('There was an error submitting your order. Please try again or email info@lineagestudio.org directly.');
-  })
-  .finally(() => {
-    submitBtn.textContent = originalText;
-    submitBtn.disabled = false;
+  const now = new Date();
+  document.getElementById('submittedAt').value = now.toLocaleString('en-US', { 
+    timeZone: 'America/New_York',
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+    hour: '2-digit',
+    minute: '2-digit',
+    second: '2-digit'
   });
 });
 
+// Initialize
 updateTotal();
 </script>
 
