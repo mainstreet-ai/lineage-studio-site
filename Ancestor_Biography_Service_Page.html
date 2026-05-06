@@ -893,13 +893,68 @@ function removeFile(listId, index) {
 }
 
 // Form Submission
+const WEBHOOK_URL = 'https://lineagestudio.app.n8n.cloud/webhook-test/ancestor-biography-order';
+
 document.getElementById('orderForm').addEventListener('submit', function(e) {
   e.preventDefault();
   
-  alert('Order form submitted! In production, this would send the form data to your n8n webhook and redirect to payment.');
+  const submitBtn = this.querySelector('.btn-submit');
+  const originalText = submitBtn.textContent;
+  submitBtn.textContent = 'Submitting Order...';
+  submitBtn.disabled = true;
   
-  // TODO: Implement actual form submission to n8n webhook
-  // TODO: Integrate with payment processor (Stripe/PayPal)
+  // Get selected package
+  const selectedPackage = document.querySelector('.package-option.selected').id;
+  
+  // Get add-on values
+  const rushChecked = document.getElementById('rush').checked;
+  const secondAncestorChecked = document.getElementById('second-ancestor').checked;
+  const extraResearchChecked = document.getElementById('extra-research').checked;
+  const copiesQty = document.getElementById('copies-qty').value;
+  
+  // Collect form data
+  const formData = {
+    name: this.querySelector('[name="name"]').value,
+    email: this.querySelector('[name="email"]').value,
+    phone: this.querySelector('[name="phone"]').value || 'Not provided',
+    ancestor_name: this.querySelector('[name="ancestor_name"]').value,
+    birth_death: this.querySelector('[name="birth_death"]').value || 'Not provided',
+    message: this.querySelector('[name="message"]').value || 'Not provided',
+    package: selectedPackage,
+    rush: rushChecked,
+    secondAncestor: secondAncestorChecked,
+    extraResearch: extraResearchChecked,
+    extraCopies: copiesQty,
+    total: document.getElementById('grand-total').textContent.replace('$', ''),
+    deposit: document.getElementById('deposit-total').textContent.replace('$', ''),
+    submittedAt: new Date().toLocaleString('en-US', { timeZone: 'America/New_York' })
+  };
+  
+  // Send to n8n webhook
+  fetch(WEBHOOK_URL, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(formData)
+  })
+  .then(response => {
+    if (!response.ok) throw new Error('Network response was not ok');
+    return response.json();
+  })
+  .then(data => {
+    alert('Order submitted successfully! Check your email for confirmation and payment instructions.');
+    this.reset();
+    updateTotal();
+  })
+  .catch(error => {
+    console.error('Error:', error);
+    alert('There was an error submitting your order. Please try again or email info@lineagestudio.org directly.');
+  })
+  .finally(() => {
+    submitBtn.textContent = originalText;
+    submitBtn.disabled = false;
+  });
 });
 
 updateTotal();
