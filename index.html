@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -1818,6 +1818,15 @@ async function submitForm(event, formId, successId, errorId) {
   }
   // ── End email validation ──────────────────────────────
 
+  // 5. Duplicate submission check — same email already submitted within 24 hours
+  try {
+    const prev = JSON.parse(localStorage.getItem('tls_submitted') || 'null');
+    if (prev && prev.email === emailVal && (Date.now() - prev.ts) < 86400000) {
+      window.top.location.href = 'thank-you.html';
+      return;
+    }
+  } catch(e) {}
+
   // Collect form data
   const data = {
     name:        form.querySelector('[name="name"]').value.trim(),
@@ -1868,6 +1877,9 @@ async function submitForm(event, formId, successId, errorId) {
 
     form.reset();
 
+    // Save submission to localStorage to prevent duplicate resubmits
+    try { localStorage.setItem('tls_submitted', JSON.stringify({email: data.email.toLowerCase(), ts: Date.now()})); } catch(e) {}
+
     // Short delay then redirect — sendBeacon guarantees delivery after navigation
     setTimeout(function() {
       window.top.location.href = 'thank-you.html';
@@ -1880,6 +1892,23 @@ async function submitForm(event, formId, successId, errorId) {
     error.style.display = 'block';
   }
 }
+
+// On page load: if this email was submitted within the last 24 hours, hide both forms and show success
+function initFormState() {
+  try {
+    const prev = JSON.parse(localStorage.getItem('tls_submitted') || 'null');
+    if (!prev || (Date.now() - prev.ts) > 86400000) return;
+    ['heroForm', 'contactForm'].forEach(function(id) {
+      const form = document.getElementById(id);
+      if (form) form.style.display = 'none';
+    });
+    ['heroSuccess', 'contactSuccess'].forEach(function(id) {
+      const el = document.getElementById(id);
+      if (el) el.style.display = 'block';
+    });
+  } catch(e) {}
+}
+document.addEventListener('DOMContentLoaded', initFormState);
 </script>
 </body>
 </html>
