@@ -1236,6 +1236,61 @@ fbq('track', 'PageView');
 <noscript><img height="1" width="1" style="display:none"
 src="https://www.facebook.com/tr?id=1039100948445761&ev=PageView&noscript=1"
 /></noscript>
+<!-- Lead source attribution capture. First touch, stored 90 days. Populates hidden fields on every form. -->
+<script>
+(function () {
+  var KEY = 'tls_attr';
+  var TTL = 90 * 24 * 60 * 60 * 1000;
+
+  function param(name) {
+    var m = new RegExp('[?&]' + name + '=([^&#]*)').exec(window.location.search);
+    return m ? decodeURIComponent(m[1].replace(/\+/g, ' ')) : '';
+  }
+
+  function classify(a) {
+    var ref = a.referrer || '';
+    var host = '';
+    try { host = ref ? new URL(ref).hostname.replace(/^www\./, '') : ''; } catch (e) {}
+    if (a.gclid || (a.utm_medium || '').toLowerCase() === 'cpc' || (a.utm_medium || '').toLowerCase() === 'ppc') return 'Google Ads';
+    if (a.fbclid || /facebook|instagram/.test((a.utm_source || '') + host)) return 'Facebook or Instagram';
+    if (a.utm_source) return 'Campaign: ' + a.utm_source;
+    if (!ref) return 'Direct';
+    if (host === location.hostname.replace(/^www\./, '')) return 'Direct';
+    if (/google|bing|yahoo|duckduckgo|ecosia/.test(host)) return 'Organic Search';
+    return 'Referral: ' + host;
+  }
+
+  var stored = null;
+  try {
+    stored = JSON.parse(localStorage.getItem(KEY) || 'null');
+    if (stored && (Date.now() - stored.ts) > TTL) stored = null;
+  } catch (e) {}
+
+  var current = {
+    utm_source: param('utm_source'),
+    utm_medium: param('utm_medium'),
+    utm_campaign: param('utm_campaign'),
+    utm_term: param('utm_term'),
+    utm_content: param('utm_content'),
+    gclid: param('gclid'),
+    fbclid: param('fbclid'),
+    referrer: document.referrer || '',
+    landing_page: window.location.pathname + window.location.search,
+    ts: Date.now()
+  };
+  current.channel = classify(current);
+
+  var hasNewTouch = current.utm_source || current.gclid || current.fbclid;
+  var attr = (hasNewTouch || !stored) ? current : stored;
+
+  if (hasNewTouch || !stored) {
+    try { localStorage.setItem(KEY, JSON.stringify(attr)); } catch (e) {}
+  }
+
+  window.TLS_ATTRIBUTION = attr;
+  window.TLS_FIRST_SEEN = new Date(attr.ts).toLocaleString('en-US', { timeZone: 'America/New_York' });
+})();
+</script>
 </head>
 <body>
 
@@ -1848,13 +1903,25 @@ async function submitForm(event, formId, successId, errorId) {
     // - Treated as a "simple request", no CORS preflight, works in all iframe contexts
     // - n8n parses form fields correctly as $json.body.name, $json.body.email, etc.
     // - Browser guarantees delivery even after page navigates away
+    var attr = window.TLS_ATTRIBUTION || {};
     var params = new URLSearchParams({
       name:         data.name,
       email:        data.email,
       interest:     data.interest,
       message:      data.message,
       source:       data.source,
-      submitted_at: data.submitted_at
+      submitted_at: data.submitted_at,
+      channel:      attr.channel || 'Unknown',
+      utm_source:   attr.utm_source || '',
+      utm_medium:   attr.utm_medium || '',
+      utm_campaign: attr.utm_campaign || '',
+      utm_term:     attr.utm_term || '',
+      utm_content:  attr.utm_content || '',
+      gclid:        attr.gclid || '',
+      fbclid:       attr.fbclid || '',
+      referrer:     attr.referrer || '',
+      landing_page: attr.landing_page || '',
+      first_seen:   window.TLS_FIRST_SEEN || ''
     });
     var payload = new Blob([params.toString()], { type: 'application/x-www-form-urlencoded' });
     var sent = navigator.sendBeacon ? navigator.sendBeacon(WEBHOOK_URL, payload) : false;
