@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The $99 Research Review | The Lineage Studio</title>
+<meta name="description" content="A firm $99. If you already have research, I verify it and show you what your book could look like. If you do not, I map out a research project and price it. The $99 is credited toward whichever project follows.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+
+<script async src="https://www.googletagmanager.com/gtag/js?id=AW-17827109575"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'AW-17827109575');
+</script>
+
+<!-- Lead source attribution capture. First touch, stored 90 days. -->
+<script>
+(function () {
+  var KEY = 'tls_attr';
+  var TTL = 90 * 24 * 60 * 60 * 1000;
+  function param(name) {
+    var m = new RegExp('[?&]' + name + '=([^&#]*)').exec(window.location.search);
+    return m ? decodeURIComponent(m[1].replace(/\+/g, ' ')) : '';
+  }
+  function classify(a) {
+    var ref = a.referrer || '';
+    var host = '';
+    try { host = ref ? new URL(ref).hostname.replace(/^www\./, '') : ''; } catch (e) {}
+    if (a.gclid || (a.utm_medium || '').toLowerCase() === 'cpc' || (a.utm_medium || '').toLowerCase() === 'ppc') return 'Google Ads';
+    if (a.fbclid || /facebook|instagram/.test((a.utm_source || '') + host)) return 'Facebook or Instagram';
+    if (a.utm_source) return 'Campaign: ' + a.utm_source;
+    if (!ref) return 'Direct';
+    if (host === location.hostname.replace(/^www\./, '')) return 'Direct';
+    if (/google|bing|yahoo|duckduckgo|ecosia/.test(host)) return 'Organic Search';
+    return 'Referral: ' + host;
+  }
+  var stored = null;
+  try {
+    stored = JSON.parse(localStorage.getItem(KEY) || 'null');
+    if (stored && (Date.now() - stored.ts) > TTL) stored = null;
+  } catch (e) {}
+  var current = {
+    utm_source: param('utm_source'), utm_medium: param('utm_medium'),
+    utm_campaign: param('utm_campaign'), utm_term: param('utm_term'),
+    utm_content: param('utm_content'), gclid: param('gclid'), fbclid: param('fbclid'),
+    referrer: document.referrer || '',
+    landing_page: window.location.pathname + window.location.search,
+    ts: Date.now()
+  };
+  current.channel = classify(current);
+  var hasNewTouch = current.utm_source || current.gclid || current.fbclid;
+  var attr = (hasNewTouch || !stored) ? current : stored;
+  if (hasNewTouch || !stored) { try { localStorage.setItem(KEY, JSON.stringify(attr)); } catch (e) {} }
+  window.TLS_ATTRIBUTION = attr;
+  window.TLS_FIRST_SEEN = new Date(attr.ts).toLocaleString('en-US', { timeZone: 'America/New_York' });
+})();
+</script>
+
+<style>
+  :root {
+    --navy:#1a4669; --navy-dark:#0f2d47; --navy-mid:#1e5280;
+    --teal:#03aeaa; --teal-light:#05ccc7; --teal-pale:#e0f7f7;
+    --amber:#f7ae21; --coral:#ef5129; --green:#7ab142;
+    --white:#ffffff; --off-white:#f8f9fa; --cream:#fdf9f4;
+    --light-gray:#f0f4f7; --mid-gray:#6b7c8f;
+    --text:#1a3a52; --text-light:#5a7a8f;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'Lato',sans-serif;color:var(--text);background:var(--white);line-height:1.7;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:1080px;margin:0 auto;padding:0 24px}
+  .narrow{max-width:760px;margin:0 auto}
+  h1,h2,h3{font-family:'Cormorant Garamond',serif;font-weight:600;line-height:1.2;color:var(--navy)}
+  h1{font-size:clamp(2.2rem,5vw,3.4rem)}
+  h2{font-size:clamp(1.7rem,3.5vw,2.4rem);margin-bottom:18px}
+  h3{font-size:1.35rem;margin-bottom:8px}
+  p{margin-bottom:16px}
+  a{color:var(--teal)}
+
+  header{background:var(--navy-dark);padding:16px 0}
+  header .wrap{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap}
+  .brand{font-family:'Cormorant Garamond',serif;color:#fff;font-size:1.5rem;letter-spacing:.5px;text-decoration:none}
+  .brand span{color:var(--teal-light)}
+  .phone{color:#fff;text-decoration:none;font-weight:700;font-size:.95rem}
+  .phone:hover{color:var(--teal-light)}
+
+  .hero{background:linear-gradient(160deg,var(--navy) 0%,var(--navy-dark) 100%);color:#fff;padding:70px 0 60px}
+  .hero h1{color:#fff;margin-bottom:18px}
+  .hero p.lede{font-size:1.2rem;color:#d6e6f2;max-width:640px}
+  .pricetag{display:inline-block;background:var(--amber);color:var(--navy-dark);font-weight:700;padding:10px 20px;border-radius:4px;font-size:1.05rem;margin-bottom:24px;letter-spacing:.3px}
+  .btn{display:inline-block;background:var(--teal);color:#fff;font-weight:700;padding:16px 34px;border-radius:4px;text-decoration:none;font-size:1.05rem;border:none;cursor:pointer;transition:background .2s}
+  .btn:hover{background:var(--teal-light)}
+  .hero .btn{margin-top:26px}
+
+  section{padding:60px 0}
+  .alt{background:var(--cream)}
+  .steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:28px;margin-top:32px}
+  .step{background:#fff;border:1px solid var(--light-gray);border-left:4px solid var(--teal);padding:24px;border-radius:4px}
+  .step .num{font-family:'Cormorant Garamond',serif;font-size:2rem;color:var(--teal);line-height:1}
+  .checks{list-style:none;margin-top:20px}
+  .checks li{padding-left:32px;position:relative;margin-bottom:14px}
+  .checks li:before{content:"";position:absolute;left:0;top:9px;width:16px;height:16px;border-radius:50%;background:var(--teal)}
+  .note{background:var(--teal-pale);border-radius:4px;padding:22px 26px;margin-top:28px}
+  .note strong{color:var(--navy)}
+
+  .formcard{background:#fff;border:1px solid var(--light-gray);border-radius:6px;padding:34px;box-shadow:0 8px 30px rgba(26,70,105,.08)}
+  .form-group{margin-bottom:18px}
+  label{display:block;font-weight:700;font-size:.9rem;margin-bottom:6px;color:var(--navy)}
+  input,select,textarea{width:100%;padding:13px 14px;border:1px solid #cfdae3;border-radius:4px;font-family:'Lato',sans-serif;font-size:1rem;color:var(--text);background:#fff}
+  input:focus,select:focus,textarea:focus{outline:none;border-color:var(--teal)}
+  textarea{min-height:110px;resize:vertical}
+  .btn-submit{width:100%;background:var(--teal);color:#fff;font-weight:700;padding:16px;border:none;border-radius:4px;font-size:1.05rem;cursor:pointer}
+  .btn-submit:hover{background:var(--teal-light)}
+  .fineprint{font-size:.85rem;color:var(--text-light);margin-top:14px;margin-bottom:0}
+  .form-error{display:none;background:#fdecea;border-left:4px solid var(--coral);padding:12px 14px;border-radius:4px;margin-top:14px;font-size:.92rem}
+
+  footer{background:var(--navy-dark);color:#c9dbe8;padding:36px 0;font-size:.92rem}
+  footer a{color:#fff;text-decoration:none}
+  footer .wrap{display:flex;justify-content:space-between;gap:18px;flex-wrap:wrap}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap">
+    <a href="/" class="brand">The Lineage <span>Studio</span></a>
+    <a class="phone" href="tel:+19045720308">Call or text (904) 572-0308</a>
+  </div>
+</header>
+
+<div class="hero">
+  <div class="wrap">
+    <div class="pricetag">A firm $99 to start, credited toward whichever project follows</div>
+    <h1>Find out what your family's records can actually support, before anyone quotes you for a book.</h1>
+    <p class="lede">The Research Review is a paid, written assessment. What it covers depends on where you are starting from. If you already have research, I verify it and show you what your book could look like. If you have nothing yet, I see how far the records carry the little you do have, then map out a research project and price it.</p>
+    <a href="#start" class="btn">Start my Research Review</a>
+  </div>
+</div>
+
+<section>
+  <div class="wrap narrow">
+    <h2>Two starting points, one $99 fee</h2>
+    <p>Nearly everyone who contacts me is in one of two situations. The $99 covers either one. What you receive is different, because what you need is different.</p>
+
+    <div class="steps" style="grid-template-columns:1fr">
+      <div class="step">
+        <h3>If you already have research</h3>
+        <p>You have an Ancestry or FamilySearch tree, files a relative put together, or work you have done yourself.</p>
+        <ul class="checks">
+          <li>I check what you have against the actual records and separate what is documented from what has been assumed.</li>
+          <li>I tell you which generations are solid, which are thin, and which are not supportable by evidence.</li>
+          <li>You get an overview of what your book could look like, chapter by chapter.</li>
+          <li>You get a firm price for that book, not a range.</li>
+        </ul>
+        <p style="margin-top:16px;margin-bottom:0"><strong>Your $99 comes off the book price</strong> if you go ahead.</p>
+      </div>
+
+      <div class="step" style="border-left-color:var(--amber)">
+        <h3>If you do not have research yet</h3>
+        <p>You have a surname, a place, a grandparent's name, and not much else. That is a perfectly normal place to begin.</p>
+        <ul class="checks">
+          <li>I take what you can give me and see how far the records carry it.</li>
+          <li>I identify which record sets apply to your family and which lines are realistically traceable.</li>
+          <li>I map out a research project: what I would pursue, in what order, and how deep it can reasonably go.</li>
+          <li>You get a firm price for that research project.</li>
+        </ul>
+        <p style="margin-top:16px;margin-bottom:0"><strong>Your $99 comes off the research project</strong> if you go ahead.</p>
+      </div>
+    </div>
+
+    <div class="note">
+      <p><strong>Research and the book are two separate projects, with separate fees.</strong> This matters, so I want it clear before you spend anything.</p>
+      <p style="margin-bottom:0">If you need research done, that is its own project, quoted on its own. When it is finished, you own the findings. If you then want a family history book written from those findings, that is a second project with its own fee. Some clients do both. Some take the research and stop there. The Santiago family history ran exactly this way: a research phase first, delivered and paid for on its own, then a separate book phase built from what that research uncovered.</p>
+    </div>
+  </div>
+</section>
+
+<section class="alt">
+  <div class="wrap narrow">
+    <h2>How it works</h2>
+    <div class="steps">
+      <div class="step">
+        <div class="num">1</div>
+        <h3>You tell me where you are</h3>
+        <p>A surname, a place, a grandparent's name, and whether you already have research. Whatever you have is enough to begin.</p>
+      </div>
+      <div class="step">
+        <div class="num">2</div>
+        <h3>I work through the records</h3>
+        <p>Census, vital, military, land, and immigration records, whichever apply to your family and the country they came from.</p>
+      </div>
+      <div class="step">
+        <div class="num">3</div>
+        <h3>You get the written review</h3>
+        <p>Delivered within ten business days, with a firm price for whatever comes next. You decide from there, with no obligation.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap narrow">
+    <h2>Why this comes first</h2>
+    <p>Most families have a tree that is part record and part recollection. The two are not the same, and only one of them belongs in a book that later generations will rely on. The Research Review sorts them out before anyone spends money on a full project.</p>
+    <p>It also answers the question every serious inquiry starts with, which is what this will actually cost. I do not quote a book or a research project until I have seen what the records hold. Once I have, I give you a firm number rather than a range.</p>
+    <p>I am Liane Menendez. I research and write family histories from documented records, and I do this work myself rather than passing it to a team.</p>
+  </div>
+</section>
+
+<section class="alt" id="start">
+  <div class="wrap narrow">
+    <h2>Start your Research Review</h2>
+    <p>Tell me where you are starting from and which line you want me to look at. I will reply personally with the next step and payment details. Nothing is charged from this form.</p>
+    <div class="formcard">
+      <form id="reviewForm" onsubmit="submitReview(event)">
+        <div class="form-group">
+          <label for="r-name">Your name</label>
+          <input type="text" id="r-name" name="name" placeholder="First name is fine" required>
+        </div>
+        <div class="form-group">
+          <label for="r-email">Email address</label>
+          <input type="email" id="r-email" name="email" placeholder="your@email.com" required>
+        </div>
+        <div class="form-group">
+          <label for="r-phone">Phone number, optional</label>
+          <input type="tel" id="r-phone" name="phone" placeholder="(904) 555 0123">
+        </div>
+        <div class="form-group">
+          <label for="r-have">Where are you starting from?</label>
+          <select id="r-have" name="starting_point" required>
+            <option value="" disabled selected>Choose the closest match...</option>
+            <option value="I already have research">I already have research, a tree, or files</option>
+            <option value="I need the research done">I need the research done for me</option>
+            <option value="Not sure">I am not sure which</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="r-msg">Which family line should I look at?</label>
+          <textarea id="r-msg" name="message" placeholder="A surname, a place, a grandparent's name, and anything you have already found." required></textarea>
+        </div>
+        <input type="hidden" name="interest" value="Research Review">
+        <button type="submit" class="btn-submit" id="reviewBtn">Request my $99 Research Review</button>
+        <div id="reviewError" class="form-error">Something went wrong. Please email me directly at <a href="mailto:info@lineagestudio.org">info@lineagestudio.org</a>.</div>
+        <p class="fineprint">The $99 is credited toward whichever project you go ahead with, the research or the book. Research and book projects are quoted and billed separately. Your details are used only to reply to you.</p>
+      </form>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div>The Lineage Studio, Jacksonville, Florida</div>
+    <div>
+      <a href="tel:+19045720308">(904) 572-0308</a> &nbsp;|&nbsp;
+      <a href="mailto:info@lineagestudio.org">info@lineagestudio.org</a> &nbsp;|&nbsp;
+      <a href="/">Main site</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+const WEBHOOK_URL = "https://lineagestudio.app.n8n.cloud/webhook/d4dd97f6-13ba-4a3f-a95b-581790c7084c";
+
+function submitReview(event) {
+  event.preventDefault();
+  var form  = document.getElementById('reviewForm');
+  var btn   = document.getElementById('reviewBtn');
+  var error = document.getElementById('reviewError');
+  error.style.display = 'none';
+
+  var emailVal = form.querySelector('[name="email"]').value.trim();
+  if (!/^[^\s@]+@[^\s@]+\.[a-z]{2,}$/i.test(emailVal)) {
+    error.textContent = 'Please check the email address and try again.';
+    error.style.display = 'block';
+    return;
+  }
+
+  try {
+    var prev = JSON.parse(localStorage.getItem('tls_submitted') || 'null');
+    if (prev && prev.email === emailVal && (Date.now() - prev.ts) < 86400000) {
+      window.top.location.href = 'thank-you.html';
+      return;
+    }
+  } catch (e) {}
+
+  btn.disabled = true;
+  btn.textContent = 'Sending...';
+
+  var attr = window.TLS_ATTRIBUTION || {};
+  var params = new URLSearchParams({
+    name:         form.querySelector('[name="name"]').value.trim(),
+    email:        emailVal,
+    interest:     'Research Review',
+    message:      form.querySelector('[name="message"]').value.trim(),
+    phone:        form.querySelector('[name="phone"]').value.trim(),
+    starting_point: form.querySelector('[name="starting_point"]').value,
+    source:       'Research Review Page',
+    submitted_at: new Date().toLocaleString('en-US', {timeZone: 'America/New_York'}),
+    channel:      attr.channel || 'Unknown',
+    utm_source:   attr.utm_source || '',
+    utm_medium:   attr.utm_medium || '',
+    utm_campaign: attr.utm_campaign || '',
+    utm_term:     attr.utm_term || '',
+    utm_content:  attr.utm_content || '',
+    gclid:        attr.gclid || '',
+    fbclid:       attr.fbclid || '',
+    referrer:     attr.referrer || '',
+    landing_page: attr.landing_page || '',
+    first_seen:   window.TLS_FIRST_SEEN || ''
+  });
+
+  var payload = new Blob([params.toString()], { type: 'application/x-www-form-urlencoded' });
+  var sent = navigator.sendBeacon ? navigator.sendBeacon(WEBHOOK_URL, payload) : false;
+  if (!sent) {
+    fetch(WEBHOOK_URL, {
+      method: 'POST', mode: 'no-cors', keepalive: true,
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: params.toString()
+    });
+  }
+
+  if (typeof gtag !== 'undefined') {
+    gtag('event', 'conversion', { 'send_to': 'AW-17827109575/MC5hCNGDvtYbEMe10LRC' });
+  }
+
+  try { localStorage.setItem('tls_submitted', JSON.stringify({email: emailVal.toLowerCase(), ts: Date.now()})); } catch (e) {}
+
+  setTimeout(function () { window.top.location.href = 'thank-you.html'; }, 300);
+}
+</script>
+</body>
+</html>
