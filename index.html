@@ -1362,8 +1362,19 @@ src="https://www.facebook.com/tr?id=1039100948445761&ev=PageView&noscript=1"
         </select>
       </div>
       <div class="form-group">
-        <label for="h-msg">What would you like to preserve? <span style="font-weight:300;text-transform:none;letter-spacing:0;font-size:11px;">(optional)</span></label>
-        <textarea id="h-msg" name="message" placeholder="A name, a story, a question, anything helps."></textarea>
+        <label for="h-msg">What would you like preserved?</label>
+        <textarea id="h-msg" name="message" required minlength="15" placeholder="The surname or family line, roughly how far back you want to go, and what you already have."></textarea>
+      </div>
+      <div class="form-group">
+        <label for="h-budget">What budget do you have in mind?</label>
+        <select id="h-budget" name="budget" required>
+          <option value="" disabled selected>Choose a range...</option>
+          <option value="Under $250">Under $250</option>
+          <option value="$250 to $600">$250 to $600</option>
+          <option value="$600 to $1,000">$600 to $1,000</option>
+          <option value="Over $1,000">Over $1,000</option>
+          <option value="Not sure yet">Not sure yet</option>
+        </select>
       </div>
       <button type="submit" class="btn-submit" id="heroBtn">Send My Inquiry →</button>
       <div id="heroSuccess" class="form-success" style="display:none">
@@ -1739,7 +1750,18 @@ src="https://www.facebook.com/tr?id=1039100948445761&ev=PageView&noscript=1"
       </div>
       <div class="form-group">
         <label for="c-msg">Tell me about your family or what you'd like to create</label>
-        <textarea id="c-msg" name="message" placeholder="A name, a generation, a goal, anything helps me understand how I can help you."></textarea>
+        <textarea id="c-msg" name="message" required minlength="15" placeholder="The surname or family line, roughly how far back you want to go, and what you already have."></textarea>
+      </div>
+      <div class="form-group">
+        <label for="c-budget">What budget do you have in mind?</label>
+        <select id="c-budget" name="budget" required>
+          <option value="" disabled selected>Choose a range...</option>
+          <option value="Under $250">Under $250</option>
+          <option value="$250 to $600">$250 to $600</option>
+          <option value="$600 to $1,000">$600 to $1,000</option>
+          <option value="Over $1,000">Over $1,000</option>
+          <option value="Not sure yet">Not sure yet</option>
+        </select>
       </div>
       <button type="submit" class="btn-submit" id="contactBtn">Send My Inquiry →</button>
       <div id="contactSuccess" class="form-success" style="display:none">
@@ -1912,6 +1934,7 @@ async function submitForm(event, formId, successId, errorId) {
     phone:       form.querySelector('[name="phone"]') ? form.querySelector('[name="phone"]').value.trim() : "",
     interest:    form.querySelector('[name="interest"]').value,
     message:     form.querySelector('[name="message"]') ? form.querySelector('[name="message"]').value.trim() : "",
+    budget:      form.querySelector('[name="budget"]') ? form.querySelector('[name="budget"]').value : "",
     source:      formId === "heroForm" ? "Hero Form" : "Contact Form",
     submitted_at: new Date().toLocaleString("en-US", {timeZone: "America/New_York"})
   };
@@ -1932,6 +1955,7 @@ async function submitForm(event, formId, successId, errorId) {
       phone:        data.phone,
       interest:     data.interest,
       message:      data.message,
+      budget:       data.budget,
       source:       data.source,
       submitted_at: data.submitted_at,
       channel:      attr.channel || 'Unknown',
